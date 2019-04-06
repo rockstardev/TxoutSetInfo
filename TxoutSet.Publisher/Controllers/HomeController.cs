@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace TxoutSet.Publisher
 {
-    [Route("api/[controller]")]
+    [Route("/")]
     [ApiController]
     public class HomeController : ControllerBase
     {
