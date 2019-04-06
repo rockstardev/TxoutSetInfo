@@ -5,9 +5,14 @@ VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TxoutSet.Fetcher", "TxoutSet.Fetcher\TxoutSet.Fetcher.csproj", "{BC321148-F2D7-4A63-A433-FB6CBEE8F7FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TxoutSet.Publisher", "TxoutSet.Publisher\TxoutSet.Publisher.csproj", "{32C4A52E-1F17-4F34-9E74-A0AF61511328}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TxoutSet.Publisher", "TxoutSet.Publisher\TxoutSet.Publisher.csproj", "{32C4A52E-1F17-4F34-9E74-A0AF61511328}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TxoutSet.Common", "TxoutSet.Common\TxoutSet.Common.csproj", "{0F2F3BC4-5046-4043-9F85-30DD56D70228}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TxoutSet.Common", "TxoutSet.Common\TxoutSet.Common.csproj", "{0F2F3BC4-5046-4043-9F85-30DD56D70228}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{378F5317-377B-4E6E-AF6D-9C654FEC0F67}"
+	ProjectSection(SolutionItems) = preProject
+		.gitlab-ci.yml = .gitlab-ci.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
