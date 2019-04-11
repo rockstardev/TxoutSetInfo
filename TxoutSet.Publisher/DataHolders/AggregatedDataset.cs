@@ -44,17 +44,27 @@ namespace TxoutSet.Publisher.DataHolders
             Auth.SetUserCredentials(_zonfig.ConsumerKey, _zonfig.ConsumerSecret, _zonfig.UserAccessToken, _zonfig.UserAccessSecret);
 
             foreach (var val in Sets.Values)
-                tweetResult(val.Set.JsonString(), val.Consensus);
+            {
+                var tweetText = val.Set.JsonString();
+                var consensusTweet = String.Join(", ", val.Consensus);
+
+                if (_zonfig.ConsoleTestTweet)
+                    consoleResult(tweetText, consensusTweet);
+                else
+                    tweetResult(tweetText, consensusTweet);
+            }
         }
 
-        private void tweetResult(string tweetText, List<string> consensus)
+        private void tweetResult(string tweetText, string consensusTweet)
         {
             var res = Tweet.PublishTweet(tweetText);
-            //Console.WriteLine(tweetText);
-
-            var consensusTweet = String.Join(", ", consensus);
             Tweet.PublishTweetInReplyTo(consensusTweet, res.Id);
-            //Console.WriteLine(consensusTweet);
+        }
+
+        private void consoleResult(string tweetText, string consensusTweet)
+        {
+            Console.WriteLine(tweetText);
+            Console.WriteLine(consensusTweet);
         }
     }
 

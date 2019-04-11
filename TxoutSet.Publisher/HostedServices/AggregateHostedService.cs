@@ -36,12 +36,12 @@ namespace TxoutSet.Publisher.HostedServices
                 {
                     // await until we get signal that data collection started, then wait 60 seconds to group calls
                     await Signal.WaitAsync(Cancellation);
-                    await Task.Delay(TimeSpan.FromSeconds(60), Cancellation);
+                    await Task.Delay(TimeSpan.FromSeconds(_zonfig.AggregationBeforeSecs), Cancellation);
 
                     AggregatedData.Tweetout(_zonfig);
 
                     // timeout after tweet - we won't be accepting data
-                    await Task.Delay(TimeSpan.FromSeconds(60), Cancellation);
+                    await Task.Delay(TimeSpan.FromSeconds(_zonfig.AggregationAfterSecs), Cancellation);
                     AggregatedData.Clear();
                     Signal.Reset();
                 }
