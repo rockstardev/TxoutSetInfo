@@ -9,7 +9,7 @@ build_test:
 docker_publisher:
     image: docker:stable
     variables:
-        CONTAINER_IMAGE: registry.gitlab.com/r0ckstardev/TweetTxoutSet/Publisher:$CI_COMMIT_REF_NAME
+        CONTAINER_IMAGE: registry.gitlab.com/r0ckstardev/tweettxoutset/publisher:$CI_COMMIT_REF_NAME
         DOCKER_HOST: tcp://docker:2375
         DOCKER_DRIVER: overlay2
     services:
