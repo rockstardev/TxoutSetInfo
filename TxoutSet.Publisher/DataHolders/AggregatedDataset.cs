@@ -12,24 +12,31 @@ namespace TxoutSet.Publisher.DataHolders
 {
     public class AggregatedDataset
     {
+        private object _syncLock = new object();
         public Dictionary<string, Dataset> Sets { get; set; } = new Dictionary<string, Dataset>();
 
         public void Add(string source, TxoutSetInfo set)
         {
-            var setHash = set.ToJsonStr().ToSHA256();
-            if (Sets.ContainsKey(setHash))
+            lock (_syncLock)
             {
-                Sets[setHash].AddSource(source);
-            }
-            else
-            {
-                Sets.Add(setHash, new Dataset(source, set));
+                var setHash = set.JsonString().ToSHA256();
+                if (Sets.ContainsKey(setHash))
+                {
+                    Sets[setHash].AddSource(source);
+                }
+                else
+                {
+                    Sets.Add(setHash, new Dataset(source, set));
+                }
             }
         }
 
         public void Clear()
         {
-            Sets.Clear();
+            lock (_syncLock)
+            {
+                Sets.Clear();
+            }
         }
 
         internal void Tweetout(Zonfig _zonfig)
@@ -37,15 +44,17 @@ namespace TxoutSet.Publisher.DataHolders
             Auth.SetUserCredentials(_zonfig.ConsumerKey, _zonfig.ConsumerSecret, _zonfig.UserAccessToken, _zonfig.UserAccessSecret);
 
             foreach (var val in Sets.Values)
-                tweetResult(val.ToJson(), val.Consensus);
+                tweetResult(val.Set.JsonString(), val.Consensus);
         }
 
         private void tweetResult(string tweetText, List<string> consensus)
         {
             var res = Tweet.PublishTweet(tweetText);
+            //Console.WriteLine(tweetText);
 
             var consensusTweet = String.Join(", ", consensus);
             Tweet.PublishTweetInReplyTo(consensusTweet, res.Id);
+            //Console.WriteLine(consensusTweet);
         }
     }
 
@@ -65,7 +74,7 @@ namespace TxoutSet.Publisher.DataHolders
             }
         }
 
-        public static string ToJsonStr(this TxoutSetInfo set)
+        public static string JsonString(this TxoutSetInfo set)
         {
             var res = JsonConvert.SerializeObject(set, Formatting.Indented);
             res = res.Replace("-1", "xXx");

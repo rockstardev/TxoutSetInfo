@@ -20,7 +20,7 @@
     "TxoutSetPublisher": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "",
       "applicationUrl": "https://localhost:32001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

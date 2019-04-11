@@ -19,6 +19,9 @@ namespace TxoutSet.Publisher
             get { return ""; }
             set
             {
+                if (String.IsNullOrWhiteSpace(value))
+                    return;
+
                 var keys = new List<ApiKey>();
                 var split = value.Split(',');
                 foreach (var s in split)

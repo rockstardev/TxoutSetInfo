@@ -34,7 +34,7 @@ namespace TxoutSet.Publisher.HostedServices
             {
                 try
                 {
-                    // await until we get signal that data collection started, then wait 60 seconds
+                    // await until we get signal that data collection started, then wait 60 seconds to group calls
                     await Signal.WaitAsync(Cancellation);
                     await Task.Delay(TimeSpan.FromSeconds(60), Cancellation);
 
@@ -42,6 +42,7 @@ namespace TxoutSet.Publisher.HostedServices
 
                     // timeout after tweet - we won't be accepting data
                     await Task.Delay(TimeSpan.FromSeconds(60), Cancellation);
+                    AggregatedData.Clear();
                     Signal.Reset();
                 }
                 catch (OperationCanceledException) when (timeout.IsCancellationRequested)
