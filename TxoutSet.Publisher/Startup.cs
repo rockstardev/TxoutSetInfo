@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using TxoutSet.Publisher.HostedServices;
 
 namespace TxoutSet.Publisher
 {
@@ -32,6 +33,8 @@ namespace TxoutSet.Publisher
             var appConfig = new Zonfig();
             Configuration.Bind("Zonfig", appConfig);
             services.AddSingleton(appConfig);
+
+            services.AddHostedService<AggregateHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Tweetinvi;
 using TxoutSet.Common;
+using TxoutSet.Publisher.HostedServices;
 
 namespace TxoutSet.Publisher.Controllers
 {
@@ -31,22 +32,10 @@ namespace TxoutSet.Publisher.Controllers
             //obj.bogosize = -1;
             //obj.disk_size = -1;
 
-            var res = JsonConvert.SerializeObject(obj, Formatting.Indented);
-            res = res.Replace("-1", "xXx");
-
-            var tweet = res.Replace("{", "").Replace("}", "").Replace("  ", "");
-            tweetResult(tweet, new List<string> { serverKey.Name });
+            AggregateHostedService.AggregatedData.Add(serverKey.Name, obj);
+            AggregateHostedService.Signal.Set();
 
             return Ok();
-        }
-
-        public void tweetResult(string tweetText, List<string> consensus)
-        {
-            Auth.SetUserCredentials(_zonfig.ConsumerKey, _zonfig.ConsumerSecret, _zonfig.UserAccessToken, _zonfig.UserAccessSecret);
-            var res = Tweet.PublishTweet(tweetText);
-
-            var consensusTweet = String.Join(", ", consensus);
-            Tweet.PublishTweetInReplyTo(consensusTweet, res.Id);
         }
     }
 }
