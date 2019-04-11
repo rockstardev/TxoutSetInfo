@@ -16,6 +16,7 @@ namespace TxoutSet.Publisher
 
         public string ApiKeysStr
         {
+            get { return ""; }
             set
             {
                 var keys = new List<ApiKey>();
