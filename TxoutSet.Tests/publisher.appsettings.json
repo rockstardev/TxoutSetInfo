@@ -1,0 +1,18 @@
+﻿{
+  "Zonfig": {
+    "AggregationBeforeSecs": 10,
+    "AggregationAfterSecs": 5,
+    "ConsoleTestTweet": true,
+
+    "ApiKeys": [
+      {
+        "Name": "@testdev (0.17.1-win64)",
+        "Key": "1234"
+      },
+      {
+        "Name": "@testdev (0.16.3-win64)",
+        "Key": "5678"
+      }
+    ]
+  }
+}

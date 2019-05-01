@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		.gitlab-ci.yml = .gitlab-ci.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TxoutSet.Tests", "TxoutSet.Tests\TxoutSet.Tests.csproj", "{8B3803B1-5652-4E18-B914-BD3C0DD49677}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{0F2F3BC4-5046-4043-9F85-30DD56D70228}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F2F3BC4-5046-4043-9F85-30DD56D70228}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F2F3BC4-5046-4043-9F85-30DD56D70228}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B3803B1-5652-4E18-B914-BD3C0DD49677}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B3803B1-5652-4E18-B914-BD3C0DD49677}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B3803B1-5652-4E18-B914-BD3C0DD49677}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B3803B1-5652-4E18-B914-BD3C0DD49677}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
