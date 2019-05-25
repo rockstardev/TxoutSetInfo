@@ -38,4 +38,15 @@ namespace TxoutSet.Publisher.Controllers
             return Ok();
         }
     }
+
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ZTestController : Controller
+    {
+        public IActionResult Get()
+        {
+            var res = AggregateHostedService.AggregatedData.LogConsole.ToArray();
+            return Json(res);
+        }
+    }
 }

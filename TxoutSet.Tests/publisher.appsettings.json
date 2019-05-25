@@ -1,6 +1,6 @@
 ﻿{
   "Zonfig": {
-    "AggregationBeforeSecs": 10,
+    "AggregationBeforeSecs": 2,
     "AggregationAfterSecs": 5,
     "ConsoleTestTweet": true,
 

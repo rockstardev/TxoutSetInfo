@@ -36,6 +36,7 @@ namespace TxoutSet.Publisher.DataHolders
             lock (_syncLock)
             {
                 Sets.Clear();
+                LogConsole.Clear();
             }
         }
 
@@ -61,10 +62,13 @@ namespace TxoutSet.Publisher.DataHolders
             Tweet.PublishTweetInReplyTo(consensusTweet, res.Id);
         }
 
+        public List<string> LogConsole = new List<string>();
         private void consoleResult(string tweetText, string consensusTweet)
         {
             Console.WriteLine(tweetText);
+            LogConsole.Add(tweetText);
             Console.WriteLine(consensusTweet);
+            LogConsole.Add(consensusTweet);
         }
     }
 
