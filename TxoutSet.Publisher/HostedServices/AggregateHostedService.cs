@@ -11,11 +11,13 @@ namespace TxoutSet.Publisher.HostedServices
 {
     public class AggregateHostedService : BaseAsyncService
     {
-        public AggregateHostedService(Zonfig zonfig)
+        public AggregateHostedService(AggregationState state, Zonfig zonfig)
         {
+            _state = state;
             _zonfig = zonfig;
         }
 
+        private readonly AggregationState _state;
         private readonly Zonfig _zonfig;
 
         internal override Task[] InitializeTasks()
@@ -26,24 +28,16 @@ namespace TxoutSet.Publisher.HostedServices
             };
         }
 
-        public static AsyncManualResetEvent Signal { get; set; } = new AsyncManualResetEvent();
-        public static AggregatedDataset AggregatedData { get; set; } = new AggregatedDataset();
         async Task GroupDataAndTweet()
         {
             using (var timeout = CancellationTokenSource.CreateLinkedTokenSource(Cancellation))
             {
                 try
                 {
-                    // await until we get signal that data collection started, then wait 60 seconds to group calls
-                    await Signal.WaitAsync(Cancellation);
-                    await Task.Delay(TimeSpan.FromSeconds(_zonfig.AggregationBeforeSecs), Cancellation);
+                    // clean AggregatedData every 10 seconds
+                    await Task.Delay(TimeSpan.FromSeconds(10), Cancellation);
 
-                    AggregatedData.Tweetout(_zonfig);
-
-                    // timeout after tweet - we won't be accepting data
-                    await Task.Delay(TimeSpan.FromSeconds(_zonfig.AggregationAfterSecs), Cancellation);
-                    AggregatedData.Clear();
-                    Signal.Reset();
+                    _state.Cleanup();
                 }
                 catch (OperationCanceledException) when (timeout.IsCancellationRequested)
                 {

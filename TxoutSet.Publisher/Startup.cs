@@ -34,6 +34,8 @@ namespace TxoutSet.Publisher
             Configuration.Bind("Zonfig", appConfig);
             services.AddSingleton(appConfig);
 
+            services.AddSingleton(new AggregationState(appConfig));
+
             services.AddHostedService<AggregateHostedService>();
         }
 

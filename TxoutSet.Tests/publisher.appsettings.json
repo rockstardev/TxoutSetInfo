@@ -2,6 +2,7 @@
   "Zonfig": {
     "AggregationBeforeSecs": 2,
     "AggregationAfterSecs": 5,
+    "AggregationRoundTimeSecs": 10,
     "ConsoleTestTweet": true,
 
     "ApiKeys": [
@@ -12,6 +13,10 @@
       {
         "Name": "@testdev (0.16.3-win64)",
         "Key": "5678"
+      },
+      {
+        "Name": "@testwiz (0.15)",
+        "Key": "9012"
       }
     ]
   }

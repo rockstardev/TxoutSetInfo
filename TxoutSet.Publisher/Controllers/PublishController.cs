@@ -14,10 +14,12 @@ namespace TxoutSet.Publisher.Controllers
     [ApiController]
     public class PublishController : ControllerBase
     {
+        private readonly AggregationState _state;
         private readonly Zonfig _zonfig;
 
-        public PublishController(Zonfig zonfig)
+        public PublishController(AggregationState state, Zonfig zonfig)
         {
+            _state = state;
             _zonfig = zonfig;
         }
 
@@ -32,8 +34,7 @@ namespace TxoutSet.Publisher.Controllers
             //obj.bogosize = -1;
             //obj.disk_size = -1;
 
-            AggregateHostedService.AggregatedData.Add(serverKey.Name, obj);
-            AggregateHostedService.Signal.Set();
+            _state.AddSet(serverKey.Name, obj);
 
             return Ok();
         }
@@ -43,9 +44,15 @@ namespace TxoutSet.Publisher.Controllers
     [ApiController]
     public class ZTestController : Controller
     {
-        public IActionResult Get()
+        private readonly AggregationState _state;
+        public ZTestController(AggregationState state)
         {
-            var res = AggregateHostedService.AggregatedData.LogConsole.ToArray();
+            _state = state;
+        }
+
+        public IActionResult Get(int height)
+        {
+            var res = _state.AggregatedData[height].LogConsole.ToArray();
             return Json(res);
         }
     }

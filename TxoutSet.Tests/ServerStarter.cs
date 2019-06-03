@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using TxoutSet.Publisher;
 
 namespace TxoutSet.Tests
@@ -37,6 +39,23 @@ namespace TxoutSet.Tests
                 .Build();
 
             _webHost.RunAsync();
+        }
+
+
+        public Task<HttpResponseMessage> PublishTweetMsg(string strBody, string apiKey)
+        {
+            var req = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(_url + "/api/publish"),
+                Headers = {
+                        { "ApiKey", apiKey },
+                        { "X-Version", "1" }
+                    },
+                Content = new StringContent(strBody, Encoding.UTF8, "application/json")
+            };
+
+            return Client.SendAsync(req);
         }
     }
 }
