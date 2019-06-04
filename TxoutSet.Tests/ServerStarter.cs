@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -56,6 +57,13 @@ namespace TxoutSet.Tests
             };
 
             return Client.SendAsync(req);
+        }
+
+        public async Task<string[]> ConsoleMessages(int height)
+        {
+            var console = await Client.GetStringAsync($"/api/ZTest?height={height}");
+            var arr = JsonConvert.DeserializeObject<string[]>(console);
+            return arr;
         }
     }
 }
