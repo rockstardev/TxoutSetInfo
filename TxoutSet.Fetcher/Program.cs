@@ -40,9 +40,8 @@ namespace TxoutSet.Fetcher
         {
             var uri = new Uri(_zonfig.BitcoindUri);
             var cred = RPCCredentialString.Parse(_zonfig.BitcoindCred);
-            var netw = Network.GetNetwork(_zonfig.BitcoindNetwork);
 
-            var rpcClient = new RPCClient(cred, uri, netw);
+            var rpcClient = new RPCClient(cred, uri, null);
 
             try
             {
@@ -69,7 +68,7 @@ namespace TxoutSet.Fetcher
             if (File.Exists(blocksFilePath))
             {
                 var executedForBlocks = Convert.ToUInt64(File.ReadAllText(blocksFilePath));
-                if (executedForBlocks <= blocks.Blocks)
+                if (executedForBlocks >= blocks.Blocks)
                 {
                     Console.WriteLine($"We already executed Fetched for block {executedForBlocks}");
                     return;
