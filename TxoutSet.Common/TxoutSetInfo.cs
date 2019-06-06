@@ -2,6 +2,7 @@
 
 namespace TxoutSet.Common
 {
+    // preserving separate class that's similar to cli output for optional compatiblity down the road
     public class TxoutSetInfo
     {
         public int height { get; set; }

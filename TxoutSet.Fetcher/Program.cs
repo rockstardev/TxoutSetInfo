@@ -29,9 +29,24 @@ namespace TxoutSet.Fetcher
 
             var blocks = rpcClient.GetBlockchainInfo();
 
+            if (blocks.Headers > blocks.Blocks)
+            {
+                Console.WriteLine("Bitcoind still syncing, please try again later...");
+                return;
+            }
 
+            var resTxoutset = rpcClient.GetTxoutSetInfo();
 
-                var res = outputString();
+            var res = new TxoutSetInfo
+            {
+                bestblock = resTxoutset.Bestblock,
+                hash_serialized_2 = resTxoutset.HashSerialized2,
+                height = resTxoutset.Height,
+                total_amount = resTxoutset.TotalAmount,
+                transactions = resTxoutset.Transactions,
+                txouts = resTxoutset.Txouts
+            };
+
             if (res == null)
             {
                 Console.WriteLine("Can't connect to bitcoind");
@@ -40,50 +55,21 @@ namespace TxoutSet.Fetcher
             {
                 var strBody = JsonConvert.SerializeObject(res);
                 //var strBody = "{\"height\":570092,\"bestblock\":\"00000000000000000026960d36e9ffe255e4bde8656a843cea2f32612b1f4b12\",\"transactions\":28714080,\"txouts\":52713092,\"hash_serialized_2\":\"914d9ebf51eac4b5875e87dc2a8ebb0c17fa188dfe4984d3416b20d9a03578fa\",\"total_amount\":17625979.82662823}";
+                Console.WriteLine($"Sending to publisher:\n{strBody}");
 
-                using (var httpClientHandler = new HttpClientHandler())
-                {
-                    httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
-                    using (var client = new HttpClient(httpClientHandler))
-                    {
-                        var resp = sendTxoutSetInfo(client, strBody);
-                        Console.WriteLine($"Sent to Publisher: {strBody}");
-                    }
-                }
+                //using (var httpClientHandler = new HttpClientHandler())
+                //{
+                //    httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+                //    using (var client = new HttpClient(httpClientHandler))
+                //    {
+                //        var resp = sendTxoutSetInfo(client, strBody);
+                //        Console.WriteLine($"Sent to Publisher:\n{strBody}");
+                //    }
+                //}
             }
 
             if (_zonfig.ReadlineAtExit)
                 Console.ReadLine();
-        }
-
-
-        static TxoutSetInfo outputString()
-        {
-            var proc = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = _zonfig.Filename,
-                    Arguments = _zonfig.Arguments,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                }
-            };
-
-            var sw = new Stopwatch();
-            sw.Start();
-
-            proc.Start();
-            var sb = new StringBuilder();
-            while (!proc.StandardOutput.EndOfStream)
-            {
-                string line = proc.StandardOutput.ReadLine();
-                sb.AppendLine(line);
-            }
-
-            var obj = JsonConvert.DeserializeObject<TxoutSetInfo>(sb.ToString());
-            return obj;
         }
 
 
