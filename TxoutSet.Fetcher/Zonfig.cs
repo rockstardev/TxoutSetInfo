@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace TxoutSet.Fetcher
@@ -12,5 +13,9 @@ namespace TxoutSet.Fetcher
         public string PublisherUrl { get; set; }
         public string PublisherApiKey { get; set; }
         public bool ReadlineAtExit { get; set; }
+
+        public string BitcoindUri { get; set; }
+        public string BitcoindCred { get; set; }
+        public string BitcoindNetwork { get; set; }
     }
 }

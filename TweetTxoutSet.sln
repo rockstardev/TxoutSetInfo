@@ -14,7 +14,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		.gitlab-ci.yml = .gitlab-ci.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TxoutSet.Tests", "TxoutSet.Tests\TxoutSet.Tests.csproj", "{8B3803B1-5652-4E18-B914-BD3C0DD49677}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TxoutSet.Tests", "TxoutSet.Tests\TxoutSet.Tests.csproj", "{8B3803B1-5652-4E18-B914-BD3C0DD49677}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NBitcoin", "NBitcoin", "{57606D1F-D80A-448B-9DB3-9AEF6ABC57A6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBitcoin", "zlibs\NBitcoin\NBitcoin\NBitcoin.csproj", "{83B9A10F-EE3D-4B4C-A53C-735308BBAF4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,9 +42,16 @@ Global
 		{8B3803B1-5652-4E18-B914-BD3C0DD49677}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B3803B1-5652-4E18-B914-BD3C0DD49677}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B3803B1-5652-4E18-B914-BD3C0DD49677}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83B9A10F-EE3D-4B4C-A53C-735308BBAF4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83B9A10F-EE3D-4B4C-A53C-735308BBAF4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83B9A10F-EE3D-4B4C-A53C-735308BBAF4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83B9A10F-EE3D-4B4C-A53C-735308BBAF4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{83B9A10F-EE3D-4B4C-A53C-735308BBAF4E} = {57606D1F-D80A-448B-9DB3-9AEF6ABC57A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {478ED8DD-D1DF-48AD-A946-85E3330299C0}

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using NBitcoin;
+using NBitcoin.RPC;
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -19,7 +21,17 @@ namespace TxoutSet.Fetcher
             var read = File.ReadAllText("zonfig.json");
             _zonfig = JsonConvert.DeserializeObject<Zonfig>(read);
 
-            var res = outputString();
+            var uri = new Uri(_zonfig.BitcoindUri);
+            var cred = RPCCredentialString.Parse(_zonfig.BitcoindCred);
+            var netw = Network.GetNetwork(_zonfig.BitcoindNetwork);
+
+            var rpcClient = new RPCClient(cred, uri, netw);
+
+            var blocks = rpcClient.GetBlockchainInfo();
+
+
+
+                var res = outputString();
             if (res == null)
             {
                 Console.WriteLine("Can't connect to bitcoind");

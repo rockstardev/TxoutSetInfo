@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TxoutSet.Common\TxoutSet.Common.csproj" />
+    <ProjectReference Include="..\zlibs\NBitcoin\NBitcoin\NBitcoin.csproj" />
   </ItemGroup>
 
 </Project>
