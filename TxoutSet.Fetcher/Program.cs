@@ -18,14 +18,44 @@ namespace TxoutSet.Fetcher
         private static Zonfig _zonfig;
         static void Main(string[] args)
         {
-            var read = File.ReadAllText("zonfig.json");
-            _zonfig = JsonConvert.DeserializeObject<Zonfig>(read);
+            using (var mutex = new Mutex(true, "r0ckstardev-wiz-nicolas-5ecfb455-804b-4ae2-ba32-a67182ea2b5f"))
+            {
+                if (!mutex.WaitOne(TimeSpan.Zero, true))
+                {
+                    Console.WriteLine("TxoutSet.Fetcher already running... skipping this run");
+                    return;
+                }
 
+                var read = File.ReadAllText("zonfig.json");
+                _zonfig = JsonConvert.DeserializeObject<Zonfig>(read);
+
+                executeProcessing();
+
+                if (_zonfig.ReadlineAtExit)
+                    Console.ReadLine();
+            }
+        }
+
+        private static void executeProcessing()
+        {
             var uri = new Uri(_zonfig.BitcoindUri);
             var cred = RPCCredentialString.Parse(_zonfig.BitcoindCred);
             var netw = Network.GetNetwork(_zonfig.BitcoindNetwork);
 
             var rpcClient = new RPCClient(cred, uri, netw);
+
+            try
+            {
+                var checkConnection = rpcClient.GetBlockCount();
+            }
+            catch (Exception ex) when (
+                ex is HttpRequestException ||
+                (ex is AggregateException && ex.InnerException is HttpRequestException)
+            )
+            {
+                Console.WriteLine("Bitcoind not running on specified uri...");
+                return;
+            }
 
             var blocks = rpcClient.GetBlockchainInfo();
 
@@ -35,8 +65,19 @@ namespace TxoutSet.Fetcher
                 return;
             }
 
-            var resTxoutset = rpcClient.GetTxoutSetInfo();
+            var blocksFilePath = Directory.GetCurrentDirectory() + ".blocks";
+            if (File.Exists(blocksFilePath))
+            {
+                var executedForBlocks = Convert.ToUInt64(File.ReadAllText(blocksFilePath));
+                if (executedForBlocks <= blocks.Blocks)
+                {
+                    Console.WriteLine($"We already executed Fetched for block {executedForBlocks}");
+                    return;
+                }
+            }
 
+            // Fetch 
+            var resTxoutset = rpcClient.GetTxoutSetInfo();
             var res = new TxoutSetInfo
             {
                 bestblock = resTxoutset.Bestblock,
@@ -47,31 +88,22 @@ namespace TxoutSet.Fetcher
                 txouts = resTxoutset.Txouts
             };
 
-            if (res == null)
-            {
-                Console.WriteLine("Can't connect to bitcoind");
-            }
-            else
-            {
-                var strBody = JsonConvert.SerializeObject(res);
-                //var strBody = "{\"height\":570092,\"bestblock\":\"00000000000000000026960d36e9ffe255e4bde8656a843cea2f32612b1f4b12\",\"transactions\":28714080,\"txouts\":52713092,\"hash_serialized_2\":\"914d9ebf51eac4b5875e87dc2a8ebb0c17fa188dfe4984d3416b20d9a03578fa\",\"total_amount\":17625979.82662823}";
-                Console.WriteLine($"Sending to publisher:\n{strBody}");
+            var strBody = JsonConvert.SerializeObject(res, Formatting.Indented);
+            //var strBody = "{\"height\":570092,\"bestblock\":\"00000000000000000026960d36e9ffe255e4bde8656a843cea2f32612b1f4b12\",\"transactions\":28714080,\"txouts\":52713092,\"hash_serialized_2\":\"914d9ebf51eac4b5875e87dc2a8ebb0c17fa188dfe4984d3416b20d9a03578fa\",\"total_amount\":17625979.82662823}";
+            Console.WriteLine($"Sending to publisher:\n{strBody}");
 
-                //using (var httpClientHandler = new HttpClientHandler())
-                //{
-                //    httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
-                //    using (var client = new HttpClient(httpClientHandler))
-                //    {
-                //        var resp = sendTxoutSetInfo(client, strBody);
-                //        Console.WriteLine($"Sent to Publisher:\n{strBody}");
-                //    }
-                //}
-            }
+            //using (var httpClientHandler = new HttpClientHandler())
+            //{
+            //    httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+            //    using (var client = new HttpClient(httpClientHandler))
+            //    {
+            //        var resp = sendTxoutSetInfo(client, strBody);
+            //        Console.WriteLine($"Sent to Publisher:\n{strBody}");
+            //    }
+            //}
 
-            if (_zonfig.ReadlineAtExit)
-                Console.ReadLine();
+            File.WriteAllText(blocksFilePath, res.height.ToString());
         }
-
 
         private static HttpResponseMessage sendTxoutSetInfo(HttpClient client, string strBody)
         {
