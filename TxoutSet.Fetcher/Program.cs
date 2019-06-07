@@ -18,16 +18,16 @@ namespace TxoutSet.Fetcher
         private static Zonfig _zonfig;
         static void Main(string[] args)
         {
-            using (var mutex = new Mutex(true, "r0ckstardev-wiz-nicolas-5ecfb455-804b-4ae2-ba32-a67182ea2b5f"))
+            var read = File.ReadAllText("zonfig.json");
+            _zonfig = JsonConvert.DeserializeObject<Zonfig>(read);
+
+            using (var mutex = new Mutex(true, "r0ckstardev-wiz-nicolas-"+ _zonfig.PublisherApiKey))
             {
                 if (!mutex.WaitOne(TimeSpan.Zero, true))
                 {
                     Console.WriteLine("TxoutSet.Fetcher already running... skipping this run");
                     return;
                 }
-
-                var read = File.ReadAllText("zonfig.json");
-                _zonfig = JsonConvert.DeserializeObject<Zonfig>(read);
 
                 executeProcessing();
 
@@ -41,7 +41,7 @@ namespace TxoutSet.Fetcher
             var uri = new Uri(_zonfig.BitcoindUri);
             var cred = RPCCredentialString.Parse(_zonfig.BitcoindCred);
 
-            var rpcClient = new RPCClient(cred, uri, null);
+            var rpcClient = new RPCClient(cred, uri, Network.Main);
 
             try
             {
@@ -64,7 +64,7 @@ namespace TxoutSet.Fetcher
                 return;
             }
 
-            var blocksFilePath = Directory.GetCurrentDirectory() + ".blocks";
+            var blocksFilePath = Directory.GetCurrentDirectory() + "\\.blocks";
             if (File.Exists(blocksFilePath))
             {
                 var executedForBlocks = Convert.ToUInt64(File.ReadAllText(blocksFilePath));
@@ -91,15 +91,17 @@ namespace TxoutSet.Fetcher
             //var strBody = "{\"height\":570092,\"bestblock\":\"00000000000000000026960d36e9ffe255e4bde8656a843cea2f32612b1f4b12\",\"transactions\":28714080,\"txouts\":52713092,\"hash_serialized_2\":\"914d9ebf51eac4b5875e87dc2a8ebb0c17fa188dfe4984d3416b20d9a03578fa\",\"total_amount\":17625979.82662823}";
             Console.WriteLine($"Sending to publisher:\n{strBody}");
 
-            //using (var httpClientHandler = new HttpClientHandler())
-            //{
-            //    httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
-            //    using (var client = new HttpClient(httpClientHandler))
-            //    {
-            //        var resp = sendTxoutSetInfo(client, strBody);
-            //        Console.WriteLine($"Sent to Publisher:\n{strBody}");
-            //    }
-            //}
+            if (_zonfig.PublisherUrl != null)
+            {
+                using (var httpClientHandler = new HttpClientHandler())
+                {
+                    httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+                    using (var client = new HttpClient(httpClientHandler))
+                    {
+                        var resp = sendTxoutSetInfo(client, strBody);
+                    }
+                }
+            }
 
             File.WriteAllText(blocksFilePath, res.height.ToString());
         }
