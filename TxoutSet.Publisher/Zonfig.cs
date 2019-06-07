@@ -12,8 +12,9 @@ namespace TxoutSet.Publisher
         public string UserAccessToken { get; set; }
         public string UserAccessSecret { get; set; }
 
-        public int AggregationBeforeSecs { get; set; } = 300;
-        public int AggregationAfterSecs { get; set; } = 60;
+        public int AggregationRoundSecs { get; set; } = 300;
+        public int CleanupTweetsAfterSecs { get; set; } = 3600;
+        public int HostedServiceIntervalMs { get; set; } = 1000;
         public bool ConsoleTestTweet { get; set; } = false;
 
         public List<ApiKey> ApiKeys { get; set; }

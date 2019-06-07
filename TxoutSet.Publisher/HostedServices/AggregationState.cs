@@ -32,11 +32,22 @@ namespace TxoutSet.Publisher.HostedServices
             }
         }
 
+        internal void TimedTweetout()
+        {
+            lock (AggregatedData)
+            {
+                var toTrigger = AggregatedData.Where(a => a.Value.RoundTimeout < DateTimeOffset.UtcNow);
+                foreach (var t in toTrigger)
+                    t.Value.TimedTweetout();
+            }
+        }
+
         internal void Cleanup()
         {
             lock (AggregatedData)
             {
-                var toRemove = AggregatedData.Where(a => a.Value.Complete).ToList();
+                var cutoff = DateTimeOffset.UtcNow.AddSeconds(-_zonfig.CleanupTweetsAfterSecs);
+                var toRemove = AggregatedData.Where(a => a.Value.Completed < cutoff).ToList();
 
                 foreach (var rm in toRemove)
                 {

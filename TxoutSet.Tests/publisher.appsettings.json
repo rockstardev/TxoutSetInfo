@@ -1,8 +1,8 @@
 ﻿{
   "Zonfig": {
-    "AggregationBeforeSecs": 2,
-    "AggregationAfterSecs": 5,
-    "AggregationRoundTimeSecs": 10,
+    "AggregationRoundSecs": 2,
+    "CleanupTweetsAfterSecs": 10,
+    "HostedServiceIntervalMs": 500,
     "ConsoleTestTweet": true,
 
     "ApiKeys": [

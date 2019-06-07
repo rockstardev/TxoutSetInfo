@@ -34,9 +34,9 @@ namespace TxoutSet.Publisher.HostedServices
             {
                 try
                 {
-                    // clean AggregatedData every 10 seconds
-                    await Task.Delay(TimeSpan.FromSeconds(10), Cancellation);
+                    await Task.Delay(TimeSpan.FromMilliseconds(_zonfig.HostedServiceIntervalMs), Cancellation);
 
+                    _state.TimedTweetout();
                     _state.Cleanup();
                 }
                 catch (OperationCanceledException) when (timeout.IsCancellationRequested)

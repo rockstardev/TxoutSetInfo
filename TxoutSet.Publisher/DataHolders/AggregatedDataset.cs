@@ -17,19 +17,31 @@ namespace TxoutSet.Publisher.DataHolders
         {
             _zonfig = zonfig;
         }
-        
+
         private readonly Zonfig _zonfig;
         private object _syncLock = new object();
 
         public Dictionary<string, TxoutSetInfo> Sets { get; set; } = new Dictionary<string, TxoutSetInfo>();
-        public bool Complete { get; set; }
+        public DateTimeOffset? Completed { get; private set; }
+        public long TweetId { get; private set; }
 
-        private CancellationTokenSource _cts;
-        private Task _timeoutTask;
+        public DateTimeOffset RoundTimeout { get; set; } = DateTimeOffset.MaxValue;
         public void Add(string senderKey, TxoutSetInfo set)
         {
             lock (_syncLock)
             {
+                // already tweeted out this round, now add consensus tweet here
+                if (Completed.HasValue)
+                {
+                    if (!Sets.ContainsKey(senderKey))
+                    {
+                        Tweet.PublishTweetInReplyTo(senderKey, TweetId);
+                    }
+                    Sets.Add(senderKey, set);
+                    return;
+                }
+
+
                 if (Sets.ContainsKey(senderKey))
                     Sets[senderKey] = set;
                 else
@@ -37,47 +49,43 @@ namespace TxoutSet.Publisher.DataHolders
 
                 if (Sets.Count == _zonfig.ApiKeys.Count)
                 {
-                    if (_cts != null)
-                        _cts.Cancel();
+                    if (RoundTimeout != DateTimeOffset.MaxValue)
+                        RoundTimeout = DateTimeOffset.MaxValue;
 
-                    Tweetout();
+                    tweetout();
                 }
                 else
                 {
                     // start task that will tweet after timeout if other results don't arrive
-                    if (_timeoutTask == null)
+                    if (RoundTimeout == DateTimeOffset.MaxValue)
                     {
-                        _cts = new CancellationTokenSource();
-                        _timeoutTask = tweetAfterTimeout(_cts.Token);
+                        RoundTimeout = DateTimeOffset.UtcNow.AddSeconds(_zonfig.AggregationRoundSecs);
                     }
                 }
             }
         }
 
-        private async Task tweetAfterTimeout(CancellationToken cancel)
+        public void TimedTweetout()
         {
-            try
+            lock (_syncLock)
             {
-                await Task.Delay(TimeSpan.FromSeconds(_zonfig.AggregationBeforeSecs), cancel);
-                Tweetout();
-            }
-            catch (OperationCanceledException) when (cancel.IsCancellationRequested)
-            {
+                tweetout();
             }
         }
 
-        internal void Tweetout()
+        private void tweetout()
         {
-            Auth.SetUserCredentials(_zonfig.ConsumerKey, _zonfig.ConsumerSecret, _zonfig.UserAccessToken, _zonfig.UserAccessSecret);
-
             var list = new List<Dataset>();
             foreach (var set in Sets)
             {
                 var entry = list.SingleOrDefault(a => a.Set.hash_serialized_2 == set.Value.hash_serialized_2);
-                if (entry == null)
-                    list.Add(new Dataset(set.Key, set.Value));
-                else
+                if (entry != null)
                     entry.AddSource(set.Key);
+                else
+                {
+                    entry = new Dataset(set.Key, set.Value);
+                    list.Add(entry);
+                }
             }
 
             foreach (var item in list)
@@ -91,12 +99,14 @@ namespace TxoutSet.Publisher.DataHolders
                     tweetResult(tweetText, consensusTweet);
             }
 
-            Complete = true;
+            Completed = DateTimeOffset.UtcNow;
         }
 
         private void tweetResult(string tweetText, string consensusTweet)
         {
+            Auth.SetUserCredentials(_zonfig.ConsumerKey, _zonfig.ConsumerSecret, _zonfig.UserAccessToken, _zonfig.UserAccessSecret);
             var res = Tweet.PublishTweet(tweetText);
+            TweetId = res.Id;
             Tweet.PublishTweetInReplyTo(consensusTweet, res.Id);
         }
 

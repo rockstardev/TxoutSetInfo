@@ -6,22 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="zonfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="zonfig.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TxoutSet.Common\TxoutSet.Common.csproj" />
     <ProjectReference Include="..\zlibs\NBitcoin\NBitcoin\NBitcoin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="zonfig.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
