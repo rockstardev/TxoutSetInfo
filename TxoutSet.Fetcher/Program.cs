@@ -79,10 +79,10 @@ namespace TxoutSet.Fetcher
             var resTxoutset = rpcClient.GetTxoutSetInfo();
             var res = new TxoutSetInfo
             {
-                bestblock = resTxoutset.Bestblock,
+                bestblock = resTxoutset.Bestblock.ToString(),
                 hash_serialized_2 = resTxoutset.HashSerialized2,
                 height = resTxoutset.Height,
-                total_amount = resTxoutset.TotalAmount,
+                total_amount = resTxoutset.TotalAmount.ToDecimal(MoneyUnit.BTC),
                 transactions = resTxoutset.Transactions,
                 txouts = resTxoutset.Txouts
             };

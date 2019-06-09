@@ -20,6 +20,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NBitcoin", "NBitcoin", "{57
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBitcoin", "zlibs\NBitcoin\NBitcoin\NBitcoin.csproj", "{83B9A10F-EE3D-4B4C-A53C-735308BBAF4E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBitcoin.Tests", "zlibs\NBitcoin\NBitcoin.Tests\NBitcoin.Tests.csproj", "{14C73F50-4B78-4D8F-A6C8-4F3C566B5B6F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBitcoin.TestFramework", "zlibs\NBitcoin\NBitcoin.TestFramework\NBitcoin.TestFramework.csproj", "{BE216E46-E47F-4587-AEA2-B5A51FF79E30}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBitcoin.Altcoins", "zlibs\NBitcoin\NBitcoin.Altcoins\NBitcoin.Altcoins.csproj", "{5AE319FF-7FF4-4ECC-A678-BA1E6874FC82}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,12 +52,27 @@ Global
 		{83B9A10F-EE3D-4B4C-A53C-735308BBAF4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83B9A10F-EE3D-4B4C-A53C-735308BBAF4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83B9A10F-EE3D-4B4C-A53C-735308BBAF4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14C73F50-4B78-4D8F-A6C8-4F3C566B5B6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14C73F50-4B78-4D8F-A6C8-4F3C566B5B6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14C73F50-4B78-4D8F-A6C8-4F3C566B5B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14C73F50-4B78-4D8F-A6C8-4F3C566B5B6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE216E46-E47F-4587-AEA2-B5A51FF79E30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE216E46-E47F-4587-AEA2-B5A51FF79E30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE216E46-E47F-4587-AEA2-B5A51FF79E30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE216E46-E47F-4587-AEA2-B5A51FF79E30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AE319FF-7FF4-4ECC-A678-BA1E6874FC82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AE319FF-7FF4-4ECC-A678-BA1E6874FC82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AE319FF-7FF4-4ECC-A678-BA1E6874FC82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AE319FF-7FF4-4ECC-A678-BA1E6874FC82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{83B9A10F-EE3D-4B4C-A53C-735308BBAF4E} = {57606D1F-D80A-448B-9DB3-9AEF6ABC57A6}
+		{14C73F50-4B78-4D8F-A6C8-4F3C566B5B6F} = {57606D1F-D80A-448B-9DB3-9AEF6ABC57A6}
+		{BE216E46-E47F-4587-AEA2-B5A51FF79E30} = {57606D1F-D80A-448B-9DB3-9AEF6ABC57A6}
+		{5AE319FF-7FF4-4ECC-A678-BA1E6874FC82} = {57606D1F-D80A-448B-9DB3-9AEF6ABC57A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {478ED8DD-D1DF-48AD-A946-85E3330299C0}
