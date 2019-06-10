@@ -39,21 +39,4 @@ namespace TxoutSet.Publisher.Controllers
             return Ok();
         }
     }
-
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ZTestController : Controller
-    {
-        private readonly AggregationState _state;
-        public ZTestController(AggregationState state)
-        {
-            _state = state;
-        }
-
-        public IActionResult Get(int height)
-        {
-            var res = _state.AggregatedData[height].LogConsole.ToArray();
-            return Json(res);
-        }
-    }
 }

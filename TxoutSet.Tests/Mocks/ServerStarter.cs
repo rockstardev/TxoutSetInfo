@@ -36,7 +36,7 @@ namespace TxoutSet.Tests
             _webHost = WebHost.CreateDefaultBuilder()
                 .UseConfiguration(config)
                 .UseUrls(_url)
-                .UseStartup<Startup>()
+                .UseStartup<StartupTest>()
                 .Build();
 
             _webHost.RunAsync();
@@ -57,13 +57,6 @@ namespace TxoutSet.Tests
             };
 
             return Client.SendAsync(req);
-        }
-
-        public async Task<string[]> ConsoleMessages(int height)
-        {
-            var console = await Client.GetStringAsync($"/api/ZTest?height={height}");
-            var arr = JsonConvert.DeserializeObject<string[]>(console);
-            return arr;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,19 +14,23 @@ namespace TxoutSet.Publisher.DataHolders
 {
     public class AggregatedDataset : IDisposable
     {
-        public AggregatedDataset(Zonfig zonfig)
+        public AggregatedDataset(Zonfig zonfig, ITweetLog logger)
         {
             _zonfig = zonfig;
+            _logger = logger;
         }
 
         private readonly Zonfig _zonfig;
+        private readonly ITweetLog _logger;
         private object _syncLock = new object();
 
+        public int Height { get; internal set; }
         public Dictionary<string, TxoutSetInfo> Sets { get; set; } = new Dictionary<string, TxoutSetInfo>();
         public DateTimeOffset? Completed { get; private set; }
         public long TweetId { get; private set; }
 
         public DateTimeOffset RoundTimeout { get; set; } = DateTimeOffset.MaxValue;
+
         public void Add(string senderKey, TxoutSetInfo set)
         {
             lock (_syncLock)
@@ -109,21 +114,16 @@ namespace TxoutSet.Publisher.DataHolders
             TweetId = res.Id;
             Tweet.PublishTweetInReplyTo(consensusTweet, res.Id);
         }
-
-        public List<string> LogConsole = new List<string>();
-
+        
         private void consoleResult(string tweetText, string consensusTweet)
         {
-            Console.WriteLine(tweetText);
-            LogConsole.Add(tweetText);
-            Console.WriteLine(consensusTweet);
-            LogConsole.Add(consensusTweet);
+            _logger.Log(Height, tweetText);
+            _logger.Log(Height, consensusTweet);
         }
 
         public void Dispose()
         {
             Sets.Clear();
-            LogConsole.Clear();
         }
     }
 

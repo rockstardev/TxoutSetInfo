@@ -24,7 +24,8 @@ namespace TxoutSet.Publisher.HostedServices
             {
                 if (!AggregatedData.ContainsKey(set.height))
                 {
-                    var obj = new AggregatedDataset(_zonfig);
+                    var obj = Startup.GetService<AggregatedDataset>();
+                    obj.Height = set.height;
                     AggregatedData.Add(set.height, obj);
                 }
 
