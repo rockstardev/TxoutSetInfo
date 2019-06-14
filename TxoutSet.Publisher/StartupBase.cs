@@ -41,11 +41,11 @@ namespace TxoutSet.Publisher
             Configuration.Bind("Zonfig", appConfig);
             services.AddSingleton(appConfig);
 
-            services.AddSingleton(new AggregationState(appConfig));
+            services.AddSingleton(typeof(AggregationState));
             services.AddTransient(typeof(AggregatedDataset));
             services.AddTransient<ILogger>(a =>
             {
-                return NLog.LogManager.GetLogger("TxoutSet.Publisher") as ILogger;
+                return NLog.LogManager.GetLogger("General") as ILogger;
             });
 
             services.AddHostedService<AggregateHostedService>();

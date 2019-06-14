@@ -14,14 +14,16 @@ namespace TxoutSet.Publisher.DataHolders
 {
     public class AggregatedDataset : IDisposable
     {
-        public AggregatedDataset(Zonfig zonfig, ITweetLog logger)
+        public AggregatedDataset(Zonfig zonfig, ITweetLog consoleLogger, ILogger logger)
         {
             _zonfig = zonfig;
+            _consoleLogger = consoleLogger;
             _logger = logger;
         }
 
         private readonly Zonfig _zonfig;
-        private readonly ITweetLog _logger;
+        private readonly ITweetLog _consoleLogger;
+        private readonly ILogger _logger;
         private object _syncLock = new object();
 
         public int Height { get; internal set; }
@@ -46,6 +48,8 @@ namespace TxoutSet.Publisher.DataHolders
                     return;
                 }
 
+                _logger.Debug("{ApiKeysName} for {Block}, {ApiKeyCurrent} out of {ApiKeysTotal}: {TxoutSetInfo}",
+                    senderKey, set.height, Sets.Count, _zonfig.ApiKeys.Count, set.JsonString());
 
                 if (Sets.ContainsKey(senderKey))
                     Sets[senderKey] = set;
@@ -56,7 +60,7 @@ namespace TxoutSet.Publisher.DataHolders
                 {
                     if (RoundTimeout != DateTimeOffset.MaxValue)
                         RoundTimeout = DateTimeOffset.MaxValue;
-
+                    
                     tweetout();
                 }
                 else
@@ -65,6 +69,7 @@ namespace TxoutSet.Publisher.DataHolders
                     if (RoundTimeout == DateTimeOffset.MaxValue)
                     {
                         RoundTimeout = DateTimeOffset.UtcNow.AddSeconds(_zonfig.AggregationRoundSecs);
+                        _logger.Debug("Round timeout set to {RoundTimeout}", RoundTimeout);
                     }
                 }
             }
@@ -97,6 +102,8 @@ namespace TxoutSet.Publisher.DataHolders
             {
                 var tweetText = item.Set.JsonString();
                 var consensusTweet = String.Join(", ", item.Consensus);
+                
+                _logger.Debug("Tweeting consensus for block {Block}: {Consensus}", item.Set.height, tweetText);
 
                 if (_zonfig.ConsoleTestTweet)
                     consoleResult(tweetText, consensusTweet);
@@ -117,8 +124,8 @@ namespace TxoutSet.Publisher.DataHolders
         
         private void consoleResult(string tweetText, string consensusTweet)
         {
-            _logger.Log(Height, tweetText);
-            _logger.Log(Height, consensusTweet);
+            _consoleLogger.Log(Height, tweetText);
+            _consoleLogger.Log(Height, consensusTweet);
         }
 
         public void Dispose()
