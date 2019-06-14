@@ -9,14 +9,14 @@ using TxoutSet.Publisher;
 using TxoutSet.Publisher.DataHolders;
 using TxoutSet.Tests.Mocks;
 
-namespace TxoutSet.Tests
+namespace TxoutSet.Tests.Mocks
 {
     public class StartupTest : StartupBase
     {
         public StartupTest(IConfiguration configuration) : base(configuration)
         { }
 
-        public override void ConfigureExtraServices(IServiceCollection services)
+        public override void ExtraInjection(IServiceCollection services)
         {
             services.AddTransient<ITweetLog, TweetLogMock>();
         }

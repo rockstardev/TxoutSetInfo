@@ -17,7 +17,7 @@ using TxoutSet.Publisher.HostedServices;
 
 namespace TxoutSet.Publisher
 {
-    public abstract class StartupBase
+    public class StartupBase
     {
         public StartupBase(IConfiguration configuration)
         {
@@ -26,8 +26,8 @@ namespace TxoutSet.Publisher
 
         public IConfiguration Configuration { get; }
 
-        internal static ServiceProvider Di { get; private set; }
-        internal static T GetService<T>()
+        public static ServiceProvider Di { get; private set; }
+        public static T GetService<T>()
         {
             return Di.GetService<T>();
         }
@@ -50,12 +50,15 @@ namespace TxoutSet.Publisher
 
             services.AddHostedService<AggregateHostedService>();
 
-            ConfigureExtraServices(services);
+            ExtraInjection(services);
 
             Di = services.BuildServiceProvider();
         }
 
-        public abstract void ConfigureExtraServices(IServiceCollection services);
+        public virtual void ExtraInjection(IServiceCollection services)
+        {
+
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -72,7 +75,7 @@ namespace TxoutSet.Publisher
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
     }

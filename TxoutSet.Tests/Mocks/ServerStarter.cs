@@ -3,14 +3,16 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TxoutSet.Publisher;
 
-namespace TxoutSet.Tests
+namespace TxoutSet.Tests.Mocks
 {
     public class ServerStarter
     {
@@ -37,9 +39,11 @@ namespace TxoutSet.Tests
                 .UseConfiguration(config)
                 .UseUrls(_url)
                 .UseStartup<StartupTest>()
+                // Ignore the startup class assembly as the "entry point" and instead point it to this app
+                .UseSetting(WebHostDefaults.ApplicationKey, typeof(Startup).GetTypeInfo().Assembly.FullName)
                 .Build();
 
-            _webHost.RunAsync();
+            _webHost.RunAsync();            
         }
 
 

@@ -22,7 +22,7 @@ namespace TxoutSet.Publisher
         public Startup(IConfiguration configuration) : base(configuration)
         { }
 
-        public override void ConfigureExtraServices(IServiceCollection services)
+        public override void ExtraInjection(IServiceCollection services)
         {
             services.AddTransient<ITweetLog, TweetLog>();
         }
