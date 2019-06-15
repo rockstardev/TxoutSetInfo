@@ -42,6 +42,10 @@ namespace TxoutSet.Publisher.HostedServices
                 catch (OperationCanceledException) when (timeout.IsCancellationRequested)
                 {
                 }
+                catch (Exception ex)
+                {
+
+                }
             }
         }
     }

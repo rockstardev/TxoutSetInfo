@@ -54,7 +54,7 @@ namespace TxoutSet.Publisher.HostedServices
         {
             lock (_syncLock)
             {
-                var cutoff = DateTimeOffset.UtcNow.AddSeconds(-_zonfig.CleanupTweetsAfterSecs);
+                var cutoff = DateTimeOffset.UtcNow.AddSeconds(_zonfig.CleanupTweetsAfterSecs);
                 var toRemove = AggregatedData.Where(a => a.Value.Completed < cutoff).ToList();
 
                 if (toRemove.Count > 0)

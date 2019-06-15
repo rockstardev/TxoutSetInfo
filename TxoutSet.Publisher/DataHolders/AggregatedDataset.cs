@@ -48,19 +48,16 @@ namespace TxoutSet.Publisher.DataHolders
                     return;
                 }
 
-                _logger.Debug("{ApiKeysName} for {Block}, {ApiKeyCurrent} out of {ApiKeysTotal}: {TxoutSetInfo}",
-                    senderKey, set.height, Sets.Count, _zonfig.ApiKeys.Count, set.JsonString());
-
                 if (Sets.ContainsKey(senderKey))
                     Sets[senderKey] = set;
                 else
                     Sets.Add(senderKey, set);
 
+                _logger.Debug("{ApiKeysName} for {Block}, {ApiKeyCurrent} out of {ApiKeysTotal}: {TxoutSetInfo}",
+                    senderKey, set.height, Sets.Count, _zonfig.ApiKeys.Count, set.JsonString());
+
                 if (Sets.Count == _zonfig.ApiKeys.Count)
-                {
-                    if (RoundTimeout != DateTimeOffset.MaxValue)
-                        RoundTimeout = DateTimeOffset.MaxValue;
-                    
+                {                    
                     tweetout();
                 }
                 else
@@ -85,6 +82,9 @@ namespace TxoutSet.Publisher.DataHolders
 
         private void tweetout()
         {
+            if (RoundTimeout != DateTimeOffset.MaxValue)
+                RoundTimeout = DateTimeOffset.MaxValue;
+
             var list = new List<Dataset>();
             foreach (var set in Sets)
             {
