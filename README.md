@@ -1,6 +1,8 @@
 # TxoutSetInfo
 
-This project tries to provide detailed history of Bitcoin UTXO set, along with detection of unintentional splits between different versions of Bitcoin Core. See codebase in action on: https://twitter.com/TxoutSetInfo
+This project provides detailed history of Bitcoin UTXO set published by various individuals from Bitcoin ecosystem. Primary use case is quick verification of UTXO set snapshots ([visit FastSync page for more details](https://github.com/btcpayserver/btcpayserver-docker/tree/master/contrib/FastSync)).
+
+See codebase in action on: https://twitter.com/TxoutSetInfo
 
 ## How to participate
 
@@ -32,12 +34,12 @@ Default config coming with release will look something like this:
 
 Read what @NicolasDorier wrote in FastSync readme: https://github.com/btcpayserver/btcpayserver-docker/tree/master/contrib/FastSync
 
-Then realize that it would be very useful if there was public repository of information on what TxoutSetInfo was during every Bitcoin block. Unfortunately, running `gettxoutsetinfo` command is very expensive, so I've created that's where this dedicated Fetcher comes in.
+Then realize that it would be very useful if there was a public repository to which various individuals from Bitcoin ecosystem can publish exact output of `gettxoutsetinfo` on every block. This would allow for quick verification of any UTXO snapshot that's published online; so long as information matches and you trust those that came to consensus on `gettxoutsetinfo` output.
 
-Also, this service is valuable for two additional reasons:
+Also, this service is valuable for other reasons:
 
-1. Monitoring UTXO set of different Bitcoin Core versions 
-2. Broadcasting state of Bitcoin blockchain that is independent from miners
+1. Broadcasting state of Bitcoin blockchain that is independent from miners
+2. Detecting unintentional splits between different versions of Bitcoin Core
 
 ## Forking
 
